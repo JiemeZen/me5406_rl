@@ -1,12 +1,27 @@
+import mujoco_env
 import gym
-import math
-import os
-from mujoco_py import load_model_from_path, MjSim, MjViewer
+import numpy as np
+from gym import utils
 
-model = load_model_from_path('./urdf/solo.xml')
-sim = MjSim(model)
-viewer = MjViewer(sim)
+# didnt use this import because their paths to get xml abit fked up so i just copied
+# their script and modified that line.
+# from gym.envs.mujoco import mujoco_env
 
-while True:
-    sim.step()
-    viewer.render()
+class SoloEnv(mujoco_env.MujocoEnv, utils.EzPickle):
+    def __init__(self):
+        mujoco_env.MujocoEnv.__init__(self, './urdf/solo.xml', 5)
+        utils.EzPickle.__init__(self)
+
+    def step(self, a):
+        pass
+
+    def _get_obs(self):
+        pass
+
+    def reset_model(self):
+        return self._get_obs()
+
+    def viewer_step(self):
+        self.viewer.cam.distance = self.model.stat.extent * 0.5
+
+env = SoloEnv()

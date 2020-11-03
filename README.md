@@ -16,5 +16,5 @@ https://docs.google.com/document/d/1RJDq4kErDUf3eswtbi8AToFeOjq-RR7MBGoKP2fwPBw/
 
 ## Viewing the XML
 1. Go to: ```~/mujoco/mujoco200/bin``` first and run command below:
-2. Inside the directory: ```mujoco200/bin$ ./simulate ~/path/me5406rl/urdf/solo8.xml```
+2. Inside the directory: ```mujoco200/bin$ ./simulate ~/path/me5406_rl/urdf/solo8.xml```
 3. Under Control, each joints can be separately controlled

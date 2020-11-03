@@ -12,4 +12,9 @@ https://docs.google.com/document/d/1RJDq4kErDUf3eswtbi8AToFeOjq-RR7MBGoKP2fwPBw/
 
 ## Solo Xacro to URDF
 1. Download the package from https://github.com/open-dynamic-robot-initiative/robot_properties_solo
-2. Convert xacro to urdf using ```rosrun xacro xacro.py your.xacro > your.urdf
+2. Convert xacro to urdf using ```rosrun xacro xacro.py your.xacro > your.urdf\
+
+## Viewing the XML
+1. Go to: ```~/mujoco/mujoco200/bin``` first and run command below:
+2. Inside the directory: ```mujoco200/bin$ ./simulate ~/path/me5406rl/urdf/solo8.xml```
+3. Under Control, each joints can be separately controlled

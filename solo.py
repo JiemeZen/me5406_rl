@@ -9,7 +9,7 @@ from gym import utils
 
 class SoloEnv(mujoco_env.MujocoEnv, utils.EzPickle):
     def __init__(self):
-        mujoco_env.MujocoEnv.__init__(self, './urdf/solo.xml', 5)
+        mujoco_env.MujocoEnv.__init__(self, './urdf/solo8.xml', 5)
         utils.EzPickle.__init__(self)
 
     def step(self, a):

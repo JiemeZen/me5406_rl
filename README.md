@@ -9,3 +9,7 @@ https://docs.google.com/document/d/1RJDq4kErDUf3eswtbi8AToFeOjq-RR7MBGoKP2fwPBw/
 3. Install Mujoco binaries and follow installation procedures. ```https://www.roboti.us/download/mujoco200_linux.zip```
 4. Install mujoco-py ```pip3 install mujoco-py```
 5. Install tensorflow 1.15 ```conda install tensorflow(-gpu)=1.15```
+
+## Solo Xacro to URDF
+1. Download the package from https://github.com/open-dynamic-robot-initiative/robot_properties_solo
+2. Convert xacro to urdf using ```rosrun xacro xacro.py your.xacro > your.urdf

@@ -1,6 +1,11 @@
 <mujoco model="solo">
-    <compiler angle="radian" />
-    <size njmax="500" nconmax="100" />
+    <compiler angle="degree" coordinate="local" inertiafromgeom="true"/>
+    <option integrator="RK4" timestep="0.01"/>
+    
+    <default>
+        <joint armature="1" damping="1" limited="true"/>
+        <geom conaffinity="0" condim="3" density="5.0" friction="1 0.5 0.5" margin="0.01" rgba="0.8 0.6 0.4 1"/>
+    </default>
     <asset>
         <mesh name="solo_body" file="solo_body.stl" />
         <mesh name="solo_upper_leg_left_side" file="solo_upper_leg_left_side.stl" />
@@ -70,13 +75,13 @@
         </body>
     </worldbody>
     <actuator>
-        <motor ctrllimited="true" ctrlrange="-10 10" joint="FL_HFE" gear="150"/>
-        <motor ctrllimited="true" ctrlrange="-10 10" joint="FL_KFE" gear="150"/>
-        <motor ctrllimited="true" ctrlrange="-10 10" joint="FR_HFE" gear="150"/>
-        <motor ctrllimited="true" ctrlrange="-10 10" joint="FR_KFE" gear="150"/>
-        <motor ctrllimited="true" ctrlrange="-10 10" joint="HL_HFE" gear="150"/>
-        <motor ctrllimited="true" ctrlrange="-10 10" joint="HL_KFE" gear="150"/>
-        <motor ctrllimited="true" ctrlrange="-10 10" joint="HR_HFE" gear="150"/>
-        <motor ctrllimited="true" ctrlrange="-10 10" joint="HR_KFE" gear="150"/>
+        <motor name="FL_TOP" ctrllimited="true" ctrlrange="-2.0 2.0" joint="FL_HFE" gear="150"/>
+        <motor name="FL_BOT" ctrllimited="true" ctrlrange="-2.0 2.0" joint="FL_KFE" gear="150"/>
+        <motor name="FR_TOP" ctrllimited="true" ctrlrange="-2.0 2.0" joint="FR_HFE" gear="150"/>
+        <motor name="FR_BOT" ctrllimited="true" ctrlrange="-2.0 2.0" joint="FR_KFE" gear="150"/>
+        <motor name="HL_TOP" ctrllimited="true" ctrlrange="-2.0 2.0" joint="HL_HFE" gear="150"/>
+        <motor name="HL_BOT" ctrllimited="true" ctrlrange="-2.0 2.0" joint="HL_KFE" gear="150"/>
+        <motor name="HR_TOP" ctrllimited="true" ctrlrange="-2.0 2.0" joint="HR_HFE" gear="150"/>
+        <motor name="HR_BOT" ctrllimited="true" ctrlrange="-2.0 2.0" joint="HR_KFE" gear="150"/>
     </actuator>
 </mujoco>

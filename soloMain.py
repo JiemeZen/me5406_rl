@@ -1,10 +1,8 @@
 import gym
 import numpy as np
-import tensorflow as tf
+import soloEnv as solo
 
-sess = tf.Session()
-
-env = gym.make('Ant-v2')
+env = solo.SoloEnv()
 obs = env.reset()
 obs_dim = env.observation_space.shape[0]
 act_dim = env.action_space.shape[0]

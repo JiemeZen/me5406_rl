@@ -70,7 +70,6 @@ class MujocoEnv(gym.Env):
         self.seed()
 
     def _set_action_space(self):
-        # unable to find actuator_ctrlrange
         bounds = self.model.actuator_ctrlrange.copy().astype(np.float32)
         low, high = bounds.T
         self.action_space = spaces.Box(low=low, high=high, dtype=np.float32)

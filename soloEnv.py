@@ -1,6 +1,6 @@
 import numpy as np
 from gym import utils
-# from gym.envs.mujoco import mujoco_env
+#from gym.envs.mujoco import mujoco_env
 import mujoco_env
 
 
@@ -65,6 +65,7 @@ class SoloEnv(mujoco_env.MujocoEnv, utils.EzPickle):
     @property
     def is_healthy(self):
         state = self.state_vector()
+        print(state)
         min_z, max_z = self._healthy_z_range
         is_healthy = (np.isfinite(state).all() and min_z <= state[2] <= max_z)
         return is_healthy
@@ -115,6 +116,7 @@ class SoloEnv(mujoco_env.MujocoEnv, utils.EzPickle):
 
     def _get_obs(self):
         position = self.sim.data.qpos.flat.copy()
+        print(self.model.nv)
         velocity = self.sim.data.qvel.flat.copy()
         contact_force = self.contact_forces.flat.copy()
 

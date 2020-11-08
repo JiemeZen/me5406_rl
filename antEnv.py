@@ -1,6 +1,6 @@
 import numpy as np
 from gym import utils
-from gym.envs.mujoco import mujoco_env
+import mujoco_env
 
 
 DEFAULT_CAMERA_CONFIG = {
@@ -10,7 +10,7 @@ DEFAULT_CAMERA_CONFIG = {
 
 class AntEnv(mujoco_env.MujocoEnv, utils.EzPickle):
     def __init__(self,
-                 xml_file='ant.xml',
+                 xml_file='./urdf/ant.xml',
                  ctrl_cost_weight=0.5,
                  contact_cost_weight=5e-4,
                  healthy_reward=1.0,
@@ -115,6 +115,7 @@ class AntEnv(mujoco_env.MujocoEnv, utils.EzPickle):
     def _get_obs(self):
         position = self.sim.data.qpos.flat.copy()
         velocity = self.sim.data.qvel.flat.copy()
+        print("velocity ", self.model.nq)
         contact_force = self.contact_forces.flat.copy()
 
         if self._exclude_current_positions_from_observation:

@@ -1,10 +1,11 @@
 import gym
 import numpy as np
-import tensorflow as tf
+import antEnv as ant
+# import tensorflow as tf
 
-sess = tf.Session()
+# sess = tf.Session()
 
-env = gym.make('Ant-v2')
+env = ant.AntEnv()
 obs = env.reset()
 obs_dim = env.observation_space.shape[0]
 act_dim = env.action_space.shape[0]
@@ -15,4 +16,5 @@ for i in range(1000):
     env.render()
     action = np.random.randn(act_dim,1)
     action = action.reshape((1,-1)).astype(np.float32)
-    obs, reward, done, _ = env.step(np.squeeze(action, axis=0))
+    obs, reward, done, info = env.step(np.squeeze(action, axis=0))
+    #print(info)

@@ -53,9 +53,9 @@ def evaluate(env, model, num_steps=1000):
 
 
 
-# env = soloEnv.SoloEnv()
-env = gym.make("Ant-v3")
-model = SAC.load("solo_model_100000")
+env = soloEnv.SoloEnv()
+# env = gym.make("Ant-v3")
+model = SAC.load("./solo/solo_model_100000")
 # model = TRPO.load("solo_model")
 # model = A2C.load("solo_model")
 

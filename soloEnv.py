@@ -70,17 +70,17 @@ class SoloEnv(mujoco_env.MujocoEnv, utils.EzPickle):
 
     @property
     def x_rotation_cost(self):
-        x_rotation_cost = self.x_rotation_cost * abs(self.data.get_body_xvelr("solo_body")[0])
+        x_rotation_cost = self._x_rotation_weight * abs(self.data.get_body_xvelr("solo_body")[0])
         return x_rotation_cost
 
     @property
     def y_rotation_cost(self):
-        y_rotation_cost = self.y_rotation_cost * abs(self.data.get_body_xvelr("solo_body")[1])
+        y_rotation_cost = self._y_rotation_weight * abs(self.data.get_body_xvelr("solo_body")[1])
         return y_rotation_cost
     
     @property
     def z_rotation_cost(self):
-        z_rotation_cost = self.z_rotation_cost * abs(self.data.get_body_xvelr("solo_body")[2])
+        z_rotation_cost = self._z_rotation_weight * abs(self.data.get_body_xvelr("solo_body")[2])
         return z_rotation_cost
 
     @property
@@ -145,7 +145,7 @@ class SoloEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         contact_cost = self.contact_cost
 
         rewards = forward_reward + healthy_reward
-        costs = deviation_cost + ctrl_cost + contact_cost + y_rotation_cost #+ x_rotation_cost + z_rotation_cost
+        costs = deviation_cost + ctrl_cost + contact_cost + self.y_rotation_cost #+ x_rotation_cost + z_rotation_cost
 
         # summation of all rewards
         reward = rewards - costs

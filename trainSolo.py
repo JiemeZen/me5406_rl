@@ -9,6 +9,10 @@ from stable_baselines.common import set_global_seeds
 from stable_baselines.common.cmd_util import make_vec_env
 from stable_baselines import PPO2, TRPO, A2C, SAC
 
+num_training_steps = 100000
+delta_steps = 10000
+folder_name = "./solo"
+
 if __name__ == "__main__":
     #env_id = "SoloEnv"
     env = soloEnv.SoloEnv()
@@ -21,6 +25,12 @@ if __name__ == "__main__":
 
     # model = A2C(MlpPolicy, env, verbose=2, tensorboard_log="./a2c_solo/")
 
-    model.learn(total_timesteps=1000000)
-    model.save("./solo_model_sac")
+    curr_trained_steps = 0
+    while (curr_trained_steps < num_training_steps):
+        if (curr_trained_steps != 0):
+            SAC.load(folder_name + "/solo_model_" + str(curr_trained_steps))
+        model.learn(total_timesteps=delta_steps)
+        curr_trained_steps += delta_steps
+        model.save(folder_name + "/solo_model_" + str(curr_trained_steps))
+
     sys.exit()

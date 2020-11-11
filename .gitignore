@@ -138,3 +138,5 @@ cython_debug/
 
 *.zip
 *_solo
+# /solo
+/ant

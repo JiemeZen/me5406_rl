@@ -25,7 +25,7 @@
         <light cutoff="100" diffuse="1 1 1" dir="-0 0 -1.3" directional="true" exponent="1" pos="0 0 1.3" specular=".1 .1 .1"/>
         <geom conaffinity="1" condim="3" material="MatPlane" name="floor" pos="0 0 0" rgba="0.8 0.9 0.8 1" size="40 40 40" type="plane"/>
     
-        <body name="solo_body" pos="0 0 0.8">
+        <body name="solo_body" pos="0 0 0.35">
             <camera name="track" mode="trackcom" pos="0 -3 0.3" xyaxes="1 0 0 0 0 1"/>
             <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.8 0.8 0.8 1" mesh="solo_body" />
             <geom type="mesh" rgba="0.8 0.8 0.8 1" mesh="solo_body" />
@@ -93,13 +93,13 @@
         </body>  <!-- End Entire Body  -->
     </worldbody>
     <actuator>
-        <motor name="FL_TOP" ctrllimited="true" ctrlrange="-1.0 1.0" joint="FL_HFE" gear="1 0 0 0 0 0"/>
-        <motor name="FL_BOT" ctrllimited="true" ctrlrange="-1.0 1.0" joint="FL_KFE" gear="1 0 0 0 0 0"/>
-        <motor name="FR_TOP" ctrllimited="true" ctrlrange="-1.0 1.0" joint="FR_HFE" gear="1 0 0 0 0 0"/>    
-        <motor name="FR_BOT" ctrllimited="true" ctrlrange="-1.0 1.0" joint="FR_KFE" gear="1 0 0 0 0 0"/>
-        <motor name="HL_TOP" ctrllimited="true" ctrlrange="-1.0 1.0" joint="HL_HFE" gear="1 0 0 0 0 0"/>
-        <motor name="HL_BOT" ctrllimited="true" ctrlrange="-1.0 1.0" joint="HL_KFE" gear="1 0 0 0 0 0"/>
-        <motor name="HR_TOP" ctrllimited="true" ctrlrange="-1.0 1.0" joint="HR_HFE" gear="1 0 0 0 0 0"/>
-        <motor name="HR_BOT" ctrllimited="true" ctrlrange="-1.0 1.0" joint="HR_KFE" gear="1 0 0 0 0 0"/>
+        <motor name="FL_TOP" ctrllimited="true" ctrlrange="-1.0 1.0" joint="FL_HFE" gear="50 0 0 0 0 0"/>
+        <motor name="FL_BOT" ctrllimited="true" ctrlrange="-1.0 1.0" joint="FL_KFE" gear="50 0 0 0 0 0"/>
+        <motor name="FR_TOP" ctrllimited="true" ctrlrange="-1.0 1.0" joint="FR_HFE" gear="50 0 0 0 0 0"/>    
+        <motor name="FR_BOT" ctrllimited="true" ctrlrange="-1.0 1.0" joint="FR_KFE" gear="50 0 0 0 0 0"/>
+        <motor name="HL_TOP" ctrllimited="true" ctrlrange="-1.0 1.0" joint="HL_HFE" gear="50 0 0 0 0 0"/>
+        <motor name="HL_BOT" ctrllimited="true" ctrlrange="-1.0 1.0" joint="HL_KFE" gear="50 0 0 0 0 0"/>
+        <motor name="HR_TOP" ctrllimited="true" ctrlrange="-1.0 1.0" joint="HR_HFE" gear="50 0 0 0 0 0"/>
+        <motor name="HR_BOT" ctrllimited="true" ctrlrange="-1.0 1.0" joint="HR_KFE" gear="50 0 0 0 0 0"/>
     </actuator>
 </mujoco>

@@ -139,3 +139,4 @@ cython_debug/
 *.zip
 /trainedModel
 /trainedAnt
+/ddpg_solo

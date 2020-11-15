@@ -1,9 +1,9 @@
 import gym
-import soloEnv
+import soloEnvSpeed
 import numpy as np
 from ddpg.ddpg import DDPG
 
-env = soloEnv.SoloEnv()
+env = soloEnvSpeed.SoloEnv()
 agent = DDPG(env, tensorboard_log="./ddpg_solo/DDPG")
 agent.load_network()
 

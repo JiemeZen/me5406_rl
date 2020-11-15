@@ -7,7 +7,7 @@ import time
 
 class SoloEnv(mujoco_env.MujocoEnv, utils.EzPickle):
     def __init__(self,
-                 xml_file="./urdf/solo8_floor.xml",
+                 xml_file="./urdf/solo8.xml",
                  terminate_when_unhealthy=True,
                  healthy_z_range=(0.2, 0.5),
                  max_distance=20

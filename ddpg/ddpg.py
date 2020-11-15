@@ -97,9 +97,8 @@ class DDPG():
         summary_ops = tf.summary.merge_all()
         return summary_ops, summary_vars
 
-    def load_network(self):
-        self.actor_network.load_network()
-        self.critic_network.load_network()
+    def load_network(self, path=None):
+        self.actor_network.load_network(path=path)
+        self.critic_network.load_network(path=path)
         
-        
-
+    

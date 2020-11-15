@@ -52,8 +52,11 @@ class CriticNetwork():
         out = Dense(1, activation='linear', kernel_initializer=RandomUniform())(x)
         return Model(inputs=[state, action], outputs=out, name=name)
 
-    def load_network(self):
-        checkpoint = tf.train.get_checkpoint_state("saved_critic_networks")
+    def load_network(self, path=None):
+        if path == None:
+            checkpoint = tf.train.get_checkpoint_state("saved_critic_networks")
+        else:
+            checkpoint = tf.train.get_checkpoint_state(path + "/saved_critic_networks")
         if checkpoint and checkpoint.model_checkpoint_path:
             self.saver.restore(self.sess, checkpoint.model_checkpoint_path)
             print("Successfully loaded:", checkpoint.model_checkpoint_path)

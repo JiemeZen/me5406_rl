@@ -1,7 +1,9 @@
 import gym
-import soloEnvSpeed
+import soloEnv
 from ddpg.ddpg import DDPG
 
-env = soloEnvSpeed.SoloEnv()
+env = soloEnv.SoloEnv()
 agent = DDPG(env, tensorboard_log="./ddpg_solo/DDPG")
-agent.learn(5000)
+print("Starting Training")
+agent.learn(1500)
+print("End Training")

@@ -1,11 +1,20 @@
 import gym
-import soloEnvSpeed
+import soloEnv
 import numpy as np
+import argparse
 from ddpg.ddpg import DDPG
 
-env = soloEnvSpeed.SoloEnv()
+parser = argparse.ArgumentParser()
+parser.add_argument('--folder', type=str, default=None, help="Directory of the model")
+args = parser.parse_args()
+
+env = soloEnv.SoloEnv()
 agent = DDPG(env, tensorboard_log="./ddpg_solo/DDPG")
-agent.load_network()
+
+if args.folder != None:
+    agent.load_network(path=str("./trainedNet/"+args.folder))
+else:
+    agent.load_network()
 
 def evaluate(env, model, num_steps=10000):
     episode_rewards = [0.0]

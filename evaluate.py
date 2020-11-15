@@ -58,7 +58,7 @@ def evaluate(env, model, num_steps=1000):
 parser = argparse.ArgumentParser()
 parser.add_argument('--folder', type=str, default="./solo", help="Directory of the model")
 parser.add_argument('--label', type=str, default="/soloWalk", help="Label of the model")
-parser.add_argument('--model', type=str, default="20000", help="Version of the model")
+parser.add_argument('--model', type=str, default="best1", help="Version of the model")
 parser.add_argument('--algo', type=str, default="SAC")
 args = parser.parse_args()
 

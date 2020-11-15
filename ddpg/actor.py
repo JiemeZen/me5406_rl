@@ -59,8 +59,11 @@ class ActorNetwork():
         gradients = zip(self.parameter_gradients, self.model.trainable_weights)
         return tf.train.AdamOptimizer(self.lr).apply_gradients(gradients)
 
-    def load_network(self):
-        checkpoint = tf.train.get_checkpoint_state("saved_actor_networks")
+    def load_network(self, path=None):
+        if path == None:
+            checkpoint = tf.train.get_checkpoint_state("saved_actor_networks")
+        else: 
+            checkpoint = tf.train.get_checkpoint_state(path + "/saved_actor_networks")
         if checkpoint and checkpoint.model_checkpoint_path:
             self.saver.restore(self.sess, checkpoint.model_checkpoint_path)
             print("Successfully loaded:", checkpoint.model_checkpoint_path)

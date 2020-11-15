@@ -12,6 +12,9 @@ class ActorNetwork():
         self.lr = lr
         self.batch_size = batch_size
         self.tau = tau
+        self.time_step = 0
+
+        self.saver = tf.train.Saver()
 
         self.model = self.create_network("actor")
         self.target_model = self.create_network("target_actor")
@@ -24,6 +27,7 @@ class ActorNetwork():
         self.sess.run(tf.initialize_all_variables())
 
     def train(self, state, action_gradient):
+        self.time_step += 1
         self.sess.run(self.optimizer, feed_dict={
             self.model.input: state,
             self.action_gradients: action_gradient
@@ -54,5 +58,18 @@ class ActorNetwork():
         self.parameter_gradients = tf.gradients(self.model.output, self.model.trainable_weights, -self.action_gradients)
         gradients = zip(self.parameter_gradients, self.model.trainable_weights)
         return tf.train.AdamOptimizer(self.lr).apply_gradients(gradients)
+
+    def load_network(self):
+        checkpoint = tf.train.get_checkpoint_state("saved_actor_networks")
+        if checkpoint and checkpoint.model_checkpoint_path:
+            self.saver.restore(self.sess, checkpoint.model_checkpoint_path)
+            print("Successfully loaded:", checkpoint.model_checkpoint_path)
+            print(checkpoint)
+        else:
+            print("Could not find old network weights")
+
+    def save_network(self):
+        print('saving actor-network...')
+        self.saver.save(self.sess, './saved_actor_networks/' + 'actor-network', global_step=self.time_step)
 
     

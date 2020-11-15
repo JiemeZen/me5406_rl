@@ -4,4 +4,4 @@ from ddpg.ddpg import DDPG
 
 env = soloEnv.SoloEnv()
 agent = DDPG(env, tensorboard_log="./ddpg_solo/DDPG")
-agent.learn(10000)
+agent.learn(1000)

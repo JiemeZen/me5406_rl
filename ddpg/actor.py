@@ -4,7 +4,6 @@ from tensorflow.keras.layers import *
 from tensorflow.keras.initializers import *
 import numpy as np
 
-
 class ActorNetwork():
     def __init__(self, sess, state_dim, act_dim, lr=0.0001, batch_size=64, tau=0.001):
         self.sess = sess
@@ -15,7 +14,6 @@ class ActorNetwork():
         self.tau = tau
 
         self.model = self.create_network("actor")
-        print(self.model.summary())
         self.target_model = self.create_network("target_actor")
 
         self.action_gradients = tf.placeholder(tf.float32, [None, self.act_dim])

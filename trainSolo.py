@@ -28,7 +28,8 @@ if __name__ == "__main__":
     curr_trained_steps = 0
     while (curr_trained_steps < num_training_steps):
         if (curr_trained_steps != 0):
-            SAC.load(folder_name + "/solo_model_" + str(curr_trained_steps))
+            model = SAC.load(folder_name + "/solo_model_" + str(curr_trained_steps))
+        model.set_env(env)
         model.learn(total_timesteps=delta_steps)
         curr_trained_steps += delta_steps
         model.save(folder_name + "/solo_model_" + str(curr_trained_steps))

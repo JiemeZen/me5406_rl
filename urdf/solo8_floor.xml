@@ -4,7 +4,7 @@
     
     <default>
         <joint armature="1" damping="1" limited="true"/>
-        <geom conaffinity="0" condim="3" density="5.0" friction="1 0.5 0.5" margin="0.01" rgba="0.8 0.6 0.4 1"/>
+        <geom conaffinity="0" condim="3" density="5.0" friction="1 0.1 0.1" margin="0.01" rgba="0.8 0.6 0.4 1"/>
     </default>
     
     <asset>
@@ -23,83 +23,97 @@
     </asset>
     <worldbody>
         <light cutoff="100" diffuse="1 1 1" dir="-0 0 -1.3" directional="true" exponent="1" pos="0 0 1.3" specular=".1 .1 .1"/>
-        <geom conaffinity="1" condim="3" material="MatPlane" name="floor" pos="0 0 0" rgba="0.8 0.9 0.8 1" size="40 40 40" type="plane"/>
+        <geom conaffinity="1" friction="1 .1 .1" condim="3" material="MatPlane" name="floor" pos="0 0 0" rgba="0.8 0.9 0.8 1" size="40 40 40" type="plane"/>
     
-        <body name="solo_body" pos="0 0 0.35">
+        <body name="solo_body" pos="0 0 0.26">
             <camera name="track" mode="trackcom" pos="0 -3 0.3" xyaxes="1 0 0 0 0 1"/>
-            <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.8 0.8 0.8 1" mesh="solo_body" />
-            <geom type="mesh" rgba="0.8 0.8 0.8 1" mesh="solo_body" />
-            <joint armature="0" damping="0" limited="false" margin="0.01" name="root" pos="0 0 0" type="free"/>
+            <geom type="mesh" group="1" rgba="0.8 0.8 0.8 1" mesh="solo_body" />
+            <!-- <geom type="mesh" rgba="0.8 0.8 0.8 1" mesh="solo_body" /> -->
+            <joint armature="0" axis="1 0 0" damping="0" limited="false" margin="0.01" name="root" pos="0 0 0" type="free"/>
             
             <body name="FL_UPPER_LEG" pos="0.19 0.1046 0">
                 <inertial pos="1.377e-05 0.0193585 -0.078707" quat="0.705834 0.0424071 -0.0424071 0.705834" mass="0.148538" diaginertia="0.000417563 0.00041107 2.46069e-05" />
-                <joint name="FL_HFE" pos="0 0 0" axis="0 1 0" limited="true" range="-90 90" />
-                <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.8 0.8 0.8 1" mesh="solo_upper_leg_left_side" />
-                <geom type="mesh" rgba="0.8 0.8 0.8 1" mesh="solo_upper_leg_left_side" />
-                <body name="FL_LOWER_LEG" pos="0 0.03745 -0.16">
+                <joint name="FL_HFE" pos="0 0 0" axis="0 1 0" limited="true" range="0 40" type="hinge"/>
+                <geom axisangle="0 1 0 40" type="mesh" group="1" rgba="0.8 0.8 0.8 1" mesh="solo_upper_leg_left_side"/>
+                <!-- <geom type="mesh" rgba="0.8 0.8 0.8 1" mesh="solo_upper_leg_left_side" /> -->
+                <!-- <body name="FL_LOWER_LEG" pos="0 0.03745 -0.16"> -->
+                <body name="FL_LOWER_LEG" pos="-0.1 0.03745 -0.125">
                     <inertial pos="0 0.00789921 -0.102249" quat="0.707067 0.00747737 -0.00747737 0.707067" mass="0.0376361" diaginertia="0.000149205 0.000148819 2.62453e-06" />
-                    <joint name="FL_KFE" pos="0 0 0" axis="0 1 0" limited="true" range="-90 90" />
-                    <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.8 0.8 0.8 1" mesh="solo_lower_leg_left_side" />
-                    <geom type="mesh" rgba="0.8 0.8 0.8 1" mesh="solo_lower_leg_left_side" />
-                    <geom pos="0 0.008 -0.16" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.8 0.8 0.8 1" mesh="solo_foot" />
-                    <geom pos="0 0.008 -0.16" type="mesh" rgba="0.8 0.8 0.8 1" mesh="solo_foot" />
+                    <joint name="FL_KFE" pos="0 0 0" axis="0 1 0" limited="true" range="-40 -10" type="hinge"/>
+                    <geom axisangle="0 1 0 -40" type="mesh" group="1" rgba="0.8 0.8 0.8 1" mesh="solo_lower_leg_left_side"/>
+                    <!-- <geom type="mesh" rgba="0.8 0.8 0.8 1" mesh="solo_lower_leg_left_side" /> -->
+                    <!-- <geom pos="0 0.008 -0.16" type="mesh" group="1" rgba="0.8 0.8 0.8 1" mesh="solo_foot" /> -->
+                    <geom pos="0.1 0.008 -0.12" type="mesh" group="1" rgba="0.8 0.8 0.8 1" mesh="solo_foot" />
+                    <!-- <geom pos="0 0.008 -0.16" type="mesh" rgba="0.8 0.8 0.8 1" mesh="solo_foot" /> -->
                 </body>
             </body>  <!-- End FL Leg Segment -->
             
             <body name="FR_UPPER_LEG" pos="0.19 -0.1046 0">
                 <inertial pos="-1.377e-05 -0.0193585 -0.078707" quat="0.705834 -0.0424071 0.0424071 0.705834" mass="0.148538" diaginertia="0.000417563 0.00041107 2.46069e-05" />
-                <joint name="FR_HFE" pos="0 0 0" axis="0 1 0" limited="true" range="-90 90" />
-                <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.8 0.8 0.8 1" mesh="solo_upper_leg_right_side" />
-                <geom type="mesh" rgba="0.8 0.8 0.8 1" mesh="solo_upper_leg_right_side" />
-                <body name="FR_LOWER_LEG" pos="0 -0.03745 -0.16">
+                <joint name="FR_HFE" pos="0 0 0" axis="0 1 0" limited="true" range="0 40" type="hinge"/>
+                <geom axisangle="0 1 0 40" type="mesh" group="1" rgba="0.8 0.8 0.8 1" mesh="solo_upper_leg_right_side" />
+                <!-- <geom type="mesh" rgba="0.8 0.8 0.8 1" mesh="solo_upper_leg_right_side" /> -->
+                <!-- <body name="FR_LOWER_LEG" pos="0 -0.03745 -0.16"> -->
+                <body name="FR_LOWER_LEG" pos="-0.1 -0.03745 -0.125">
                     <inertial pos="0 0.00495053 -0.102249" quat="0.999484 -0.0321221 0 0" mass="0.0376361" diaginertia="0.000150245 0.000149742 3.5132e-06" />
-                    <joint name="FR_KFE" pos="0 0 0" axis="0 1 0" limited="true" range="-90 90" />
-                    <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.8 0.8 0.8 1" mesh="solo_lower_leg_right_side" />
-                    <geom type="mesh" rgba="0.8 0.8 0.8 1" mesh="solo_lower_leg_right_side" />
-                    <geom pos="0 -0.008 -0.16" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.8 0.8 0.8 1" mesh="solo_foot" />
-                    <geom pos="0 -0.008 -0.16" type="mesh" rgba="0.8 0.8 0.8 1" mesh="solo_foot" />
+                    <joint name="FR_KFE" pos="0 0 0" axis="0 1 0" limited="true" range="-40 -10" type="hinge"/>
+                    <geom axisangle="0 1 0 -40" type="mesh" group="1" rgba="0.8 0.8 0.8 1" mesh="solo_lower_leg_right_side" />
+                    <!-- <geom type="mesh" rgba="0.8 0.8 0.8 1" mesh="solo_lower_leg_right_side" /> -->
+                    <!-- <geom pos="0 -0.008 -0.16" type="mesh" group="1" rgba="0.8 0.8 0.8 1" mesh="solo_foot" /> -->
+                    <geom pos="0.1 -0.008 -0.12" type="mesh" group="1" rgba="0.8 0.8 0.8 1" mesh="solo_foot" />
+                    <!-- <geom pos="0 -0.008 -0.16" type="mesh" rgba="0.8 0.8 0.8 1" mesh="solo_foot" /> -->
                 </body>
             </body>  <!-- End FR Leg Segment -->
             
             <body name="HL_UPPER_LEG" pos="-0.19 0.1046 0">
                 <inertial pos="1.377e-05 0.0193585 -0.078707" quat="0.705834 0.0424071 -0.0424071 0.705834" mass="0.148538" diaginertia="0.000417563 0.00041107 2.46069e-05" />
-                <joint name="HL_HFE" pos="0 0 0" axis="0 1 0" limited="true" range="-90 90" />
-                <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.8 0.8 0.8 1" mesh="solo_upper_leg_left_side" />
-                <geom type="mesh" rgba="0.8 0.8 0.8 1" mesh="solo_upper_leg_left_side" />
-                <body name="HL_LOWER_LEG" pos="0 0.03745 -0.16">
+                <joint name="HL_HFE" pos="0 0 0" axis="0 1 0" limited="true" range="0 40" type="hinge"/>
+                <geom axisangle="0 1 0 40" type="mesh" group="1" rgba="0.8 0.8 0.8 1" mesh="solo_upper_leg_left_side" />
+                <!-- <geom type="mesh" rgba="0.8 0.8 0.8 1" mesh="solo_upper_leg_left_side" /> -->
+                <!-- <body name="HL_LOWER_LEG" pos="0 0.03745 -0.16"> -->
+                <body name="HL_LOWER_LEG" pos="-0.1 0.03745 -0.125">
                     <inertial pos="0 0.00789921 -0.102249" quat="0.707067 0.00747737 -0.00747737 0.707067" mass="0.0376361" diaginertia="0.000149205 0.000148819 2.62453e-06" />
-                    <joint name="HL_KFE" pos="0 0 0" axis="0 1 0" limited="true" range="-90 90" />
-                    <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.8 0.8 0.8 1" mesh="solo_lower_leg_left_side" />
-                    <geom type="mesh" rgba="0.8 0.8 0.8 1" mesh="solo_lower_leg_left_side" />
-                    <geom pos="0 0.008 -0.16" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.8 0.8 0.8 1" mesh="solo_foot" />
-                    <geom pos="0 0.008 -0.16" type="mesh" rgba="0.8 0.8 0.8 1" mesh="solo_foot" />
+                    <joint name="HL_KFE" pos="0 0 0" axis="0 1 0" limited="true" range="-40 -10" type="hinge"/>
+                    <!-- <geom axisangle="0 1 0 -30" type="mesh" group="1" rgba="0.8 0.8 0.8 1" mesh="solo_lower_leg_left_side" /> -->
+                    <geom axisangle="0 1 0 -40" type="mesh" group="1" rgba="0.8 0.8 0.8 1" mesh="solo_lower_leg_left_side" />
+
+                    <!-- <geom type="mesh" rgba="0.8 0.8 0.8 1" mesh="solo_lower_leg_left_side" /> -->
+                    <!-- <geom pos="0 0.008 -0.16" type="mesh" group="1" rgba="0.8 0.8 0.8 1" mesh="solo_foot" /> -->
+                    <geom pos="0.1 0.008 -0.12" type="mesh" group="1" rgba="0.8 0.8 0.8 1" mesh="solo_foot" />
+
+                    <!-- <geom pos="0 0.008 -0.16" type="mesh" rgba="0.8 0.8 0.8 1" mesh="solo_foot" /> -->
                 </body>
             </body>  <!-- End HL Leg Segment -->
             
             <body name="HR_UPPER_LEG" pos="-0.19 -0.1046 0">
                 <inertial pos="-1.377e-05 -0.0193585 -0.078707" quat="0.705834 -0.0424071 0.0424071 0.705834" mass="0.148538" diaginertia="0.000417563 0.00041107 2.46069e-05" />
-                <joint name="HR_HFE" pos="0 0 0" axis="0 1 0" limited="true" range="-90 90" />
-                <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.8 0.8 0.8 1" mesh="solo_upper_leg_right_side" />
-                <geom type="mesh" rgba="0.8 0.8 0.8 1" mesh="solo_upper_leg_right_side" />
-                <body name="HR_LOWER_LEG" pos="0 -0.03745 -0.16">
+                <joint name="HR_HFE" pos="0 0 0" axis="0 1 0" limited="true" range="0 40" type="hinge"/>
+                <geom axisangle="0 1 0 40" type="mesh" group="1" rgba="0.8 0.8 0.8 1" mesh="solo_upper_leg_right_side" />
+                <!-- <geom type="mesh" rgba="0.8 0.8 0.8 1" mesh="solo_upper_leg_right_side" /> -->
+                <!-- <body name="HR_LOWER_LEG" pos="0 -0.03745 -0.16"> -->
+                <body name="HR_LOWER_LEG" pos="-0.1 -0.03745 -0.125">
                     <inertial pos="0 0.00495053 -0.102249" quat="0.999484 -0.0321221 0 0" mass="0.0376361" diaginertia="0.000150245 0.000149742 3.5132e-06" />
-                    <joint name="HR_KFE" pos="0 0 0" axis="0 1 0" limited="true" range="-90 90" />
-                    <geom type="mesh" contype="0" conaffinity="0" group="1" rgba="0.8 0.8 0.8 1" mesh="solo_lower_leg_right_side" />
-                    <geom type="mesh" rgba="0.8 0.8 0.8 1" mesh="solo_lower_leg_right_side" />
-                    <geom pos="0 -0.008 -0.16" type="mesh" contype="0" conaffinity="0" group="1" rgba="0.8 0.8 0.8 1" mesh="solo_foot" />
-                    <geom pos="0 -0.008 -0.16" type="mesh" rgba="0.8 0.8 0.8 1" mesh="solo_foot" />
+                    <joint name="HR_KFE" pos="0 0 0" axis="0 1 0" limited="true" range="-40 -10" type="hinge"/>
+                    <!-- <geom axisangle="0 1 0 -30" type="mesh" group="1" rgba="0.8 0.8 0.8 1" mesh="solo_lower_leg_right_side" /> -->
+                    <geom axisangle="0 1 0 -40" type="mesh" group="1" rgba="0.8 0.8 0.8 1" mesh="solo_lower_leg_right_side" />
+
+                    <!-- <geom type="mesh" rgba="0.8 0.8 0.8 1" mesh="solo_lower_leg_right_side" /> -->
+                    <!-- <geom pos="0 -0.008 -0.16" type="mesh" group="1" rgba="0.8 0.8 0.8 1" mesh="solo_foot" /> -->
+                    <geom pos="0.1 -0.008 -0.12" type="mesh" group="1" rgba="0.8 0.8 0.8 1" mesh="solo_foot" />
+
+                    <!-- <geom pos="0 -0.008 -0.16" type="mesh" rgba="0.8 0.8 0.8 1" mesh="solo_foot" /> -->
                 </body>
             </body>  <!-- End HR Leg Segment -->
         </body>  <!-- End Entire Body  -->
     </worldbody>
     <actuator>
         <motor name="FL_TOP" ctrllimited="true" ctrlrange="-1.0 1.0" joint="FL_HFE" gear="50 0 0 0 0 0"/>
-        <motor name="FL_BOT" ctrllimited="true" ctrlrange="-1.0 1.0" joint="FL_KFE" gear="50 0 0 0 0 0"/>
+        <motor name="FL_BOT" ctrllimited="true" ctrlrange="-1.0 1.0" joint="FL_KFE" gear="30 0 0 0 0 0"/>
         <motor name="FR_TOP" ctrllimited="true" ctrlrange="-1.0 1.0" joint="FR_HFE" gear="50 0 0 0 0 0"/>    
-        <motor name="FR_BOT" ctrllimited="true" ctrlrange="-1.0 1.0" joint="FR_KFE" gear="50 0 0 0 0 0"/>
+        <motor name="FR_BOT" ctrllimited="true" ctrlrange="-1.0 1.0" joint="FR_KFE" gear="30 0 0 0 0 0"/>
         <motor name="HL_TOP" ctrllimited="true" ctrlrange="-1.0 1.0" joint="HL_HFE" gear="50 0 0 0 0 0"/>
-        <motor name="HL_BOT" ctrllimited="true" ctrlrange="-1.0 1.0" joint="HL_KFE" gear="50 0 0 0 0 0"/>
+        <motor name="HL_BOT" ctrllimited="true" ctrlrange="-1.0 1.0" joint="HL_KFE" gear="30 0 0 0 0 0"/>
         <motor name="HR_TOP" ctrllimited="true" ctrlrange="-1.0 1.0" joint="HR_HFE" gear="50 0 0 0 0 0"/>
-        <motor name="HR_BOT" ctrllimited="true" ctrlrange="-1.0 1.0" joint="HR_KFE" gear="50 0 0 0 0 0"/>
+        <motor name="HR_BOT" ctrllimited="true" ctrlrange="-1.0 1.0" joint="HR_KFE" gear="30 0 0 0 0 0"/>
     </actuator>
 </mujoco>

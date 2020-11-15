@@ -15,7 +15,7 @@ class CriticNetwork():
         self.model = self.create_network('critic')
         self.target_model = self.create_network('critic_target')
         self.model.compile(loss='mse', optimizer=tf.train.AdamOptimizer(lr))
-        self.target_model.compile(loss='mse', optimizer=tf.train.AdamOptimizer(lr). metrics=['Target_critic accuracy'])
+        self.target_model.compile(loss='mse', optimizer=tf.train.AdamOptimizer(lr), metrics=['accuracy'])
        
         self.action_gradients = tf.gradients(self.model.output, self.model.input[1])
         self.sess.run(tf.initialize_all_variables())

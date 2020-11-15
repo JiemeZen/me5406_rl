@@ -23,7 +23,6 @@ class DDPG():
         self.critic_network = CriticNetwork(self.sess, self.obs_dim, self.act_dim)
 
         self.replay_buffer = ReplayBuffer(1000000)
-
         self.exploration_noise = OUNoise(self.act_dim)
 
     def train(self):
@@ -38,9 +37,9 @@ class DDPG():
         #action_batch = np.resize(action_batch, [self.batch_size, self.act_dim])
 
         # actor takes in state, here i calculate the predicted action by target network, (label) for my main network to chase
-        next_action_batch = self.actor_network.predict_target(state_batch)
+        next_action_batch = self.actor_network.predict_target(next_state_batch)
         # critic takes in state and action, i calculate q value, (label) for my critic main network to chase
-        q_value_batch = self.critic_network.predict_target(state_batch, next_action_batch)
+        q_value_batch = self.critic_network.predict_target(next_state_batch, next_action_batch)
 
         y_batch = []
         for i in range(len(minibatch)):

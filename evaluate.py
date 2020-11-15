@@ -43,6 +43,7 @@ def evaluate(env, model, num_steps=1000):
 
       obs, reward, done, info = env.step(action)
       env.render()
+      print(info)
 
       episode_rewards[-1] += reward
       if done:

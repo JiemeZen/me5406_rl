@@ -11,16 +11,20 @@ class CriticNetwork():
         self.act_dim = act_dim
         self.lr = lr
         self.tau = tau
+        self.time_step = 0
+
+        self.saver = tf.train.Saver()
 
         self.model = self.create_network('critic')
         self.target_model = self.create_network('critic_target')
         self.model.compile(loss='mse', optimizer=tf.train.AdamOptimizer(lr))
-        self.target_model.compile(loss='mse', optimizer=tf.train.AdamOptimizer(lr))
+        self.target_model.compile(loss='mse', optimizer=tf.train.AdamOptimizer(lr), metrics=['accuracy'])
        
         self.action_gradients = tf.gradients(self.model.output, self.model.input[1])
         self.sess.run(tf.initialize_all_variables())
 
     def train(self, labels, state, action):
+        self.time_step += 1
         self.model.train_on_batch([state, action], labels)
 
     def action_gradient(self, states, actions):
@@ -47,3 +51,15 @@ class CriticNetwork():
         x = Dense(64, activation='relu')(x)
         out = Dense(1, activation='linear', kernel_initializer=RandomUniform())(x)
         return Model(inputs=[state, action], outputs=out, name=name)
+
+    def load_network(self):
+        checkpoint = tf.train.get_checkpoint_state("saved_critic_networks")
+        if checkpoint and checkpoint.model_checkpoint_path:
+            self.saver.restore(self.sess, checkpoint.model_checkpoint_path)
+            print("Successfully loaded:", checkpoint.model_checkpoint_path)
+        else:
+            print("Could not find old network weights")
+
+    def save_network(self):
+        print('saving critic-network...')
+        self.saver.save(self.sess, './saved_critic_networks/' + 'critic-network', global_step=self.time_step)

@@ -7,14 +7,17 @@ from .replay_buffer import ReplayBuffer
 from .ounoise import OUNoise
 
 class DDPG():
-    def __init__(self, env, batch_size=128, gamma=0.99):
+    def __init__(self, env, batch_size=64, gamma=0.99, tensorboard_log=None):
         self.obs_dim = env.observation_space.shape[0]
         self.act_dim = env.action_space.shape[0]
         self.env = env
         self.batch_size = batch_size
         self.gamma = gamma
-                
+
         self.sess = tf.InteractiveSession()
+        if tensorboard_log is not None:
+            self.summary_ops, self.summary_vars = self.build_summaries()    
+            self.writer = tf.summary.FileWriter(tensorboard_log, self.sess.graph)
 
         self.actor_network = ActorNetwork(self.sess, self.obs_dim, self.act_dim)
         self.critic_network = CriticNetwork(self.sess, self.obs_dim, self.act_dim)
@@ -25,14 +28,14 @@ class DDPG():
 
     def train(self):
         minibatch = self.replay_buffer.get_batch(self.batch_size)
-        state_batch = np.asarray([data[0] for data in minibatch])
-        action_batch = np.asarray([data[1] for data in minibatch])
-        reward_batch = np.asarray([data[2] for data in minibatch])
-        next_state_batch = np.asarray([data[3] for data in minibatch])
-        done_batch = np.asarray([data[4] for data in minibatch])
+        state_batch = np.array([data[0] for data in minibatch])
+        action_batch = np.array([data[1] for data in minibatch])
+        reward_batch = np.array([data[2] for data in minibatch])
+        next_state_batch = np.array([data[3] for data in minibatch])
+        done_batch = np.array([data[4] for data in minibatch])
 
-        state_batch = np.resize(state_batch, [self.batch_size, self.obs_dim])
-        action_batch = np.resize(action_batch, [self.batch_size, self.act_dim])
+        #state_batch = np.resize(state_batch, [self.batch_size, self.obs_dim])
+        #action_batch = np.resize(action_batch, [self.batch_size, self.act_dim])
 
         # actor takes in state, here i calculate the predicted action by target network, (label) for my main network to chase
         next_action_batch = self.actor_network.predict_target(state_batch)
@@ -46,7 +49,7 @@ class DDPG():
             else:
                 y_batch.append(reward_batch[i] + self.gamma * q_value_batch[i])
         
-        y_batch = np.resize(y_batch, [self.batch_size])
+        y_batch = np.reshape(y_batch, (self.batch_size, 1))
 
         # training, train critic and actor
         self.critic_network.train(y_batch, state_batch, action_batch)
@@ -56,27 +59,48 @@ class DDPG():
         self.actor_network.update_target()
         self.critic_network.update_target()
 
-    def store_experience(self, state, action, reward, next_state, done):
-        self.replay_buffer.add(state, action, reward, next_state, done)
-
-        if self.replay_buffer.size() > self.batch_size:
-            self.train()
-
 
     def learn(self, episodes):
         for episode in range(episodes):
             state = self.env.reset()
             episode_reward = 0
-            for step in range(100):
+            for step in range(5000):
                 action = self.actor_network.predict(np.reshape(state, (-1, self.obs_dim))) + self.exploration_noise.noise()
                 new_state, reward, done, info = self.env.step(action)
-                self.store_experience(state, action, reward, new_state, done)
+                self.replay_buffer.add(
+                    np.reshape(state, (self.obs_dim,)),
+                    np.reshape(action, (self.act_dim,)),
+                    reward,
+                    np.reshape(new_state, (self.obs_dim,)),
+                    done)
+
+                if self.replay_buffer.size() > self.batch_size:
+                    self.train()
+
                 state = new_state
                 episode_reward += reward
                 if done:
                     self.exploration_noise.reset()
-                    print("Episode {}: {} reward".format(episode, episode_reward))
+                    summary = self.sess.run(self.summary_ops, feed_dict={
+                        self.summary_vars[0]: episode_reward
+                    })
+                    self.writer.add_summary(summary, episode)
+                    self.writer.flush()
+                    # print("Episode {}: {} reward".format(episode, episode_reward))
                     break
+        self.actor_network.save_network()
+        self.critic_network.save_network()
+
+    def build_summaries(self):
+        episode_reward = tf.Variable(0)
+        tf.summary.scalar("Episode reward", episode_reward)
+        summary_vars = [episode_reward]
+        summary_ops = tf.summary.merge_all()
+        return summary_ops, summary_vars
+
+    def load_network(self):
+        self.actor_network.load_network()
+        self.critic_network.load_network()
         
         
 

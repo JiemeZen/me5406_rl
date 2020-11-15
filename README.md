@@ -18,3 +18,8 @@ https://docs.google.com/document/d/1RJDq4kErDUf3eswtbi8AToFeOjq-RR7MBGoKP2fwPBw/
 1. Go to: ```~/mujoco/mujoco200/bin``` first and run command below:
 2. Inside the directory: ```mujoco200/bin$ ./simulate ~/path/me5406_rl/urdf/solo8.xml```
 3. Under Control, each joints can be separately controlled
+
+## References
+1. DDPG tensorflow https://github.com/agakshat/tensorflow-ddpg
+2. https://towardsdatascience.com/deep-deterministic-policy-gradients-explained-2d94655a9b7b
+3. https://arxiv.org/pdf/1509.02971.pdf

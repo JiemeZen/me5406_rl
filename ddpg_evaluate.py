@@ -27,6 +27,7 @@ def evaluate(env, model, info, num_steps=10000):
             episode_rewards.append(0.0)
 
 env = SoloEnv(args.map)
+
 agent = DDPG(env, tensorboard_log="./ddpg_tensorboard/DDPG_" + args.model_name)
 agent.load_network(args.model_name)
 evaluate(env, agent, info=args.verbose)

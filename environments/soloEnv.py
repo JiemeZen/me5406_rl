@@ -7,31 +7,21 @@ import time
 
 class SoloEnv(mujoco_env.MujocoEnv, utils.EzPickle):
     def __init__(self,
-                 xml_file="../assets/solo8_hfield.xml",
+                 xml_file="../assets/solo8.xml",
 
                  terminate_when_unhealthy=True,
                  healthy_z_range=(0.17, 0.8),
-                 healthy_y_range=(-0.8, 0.8)
+                 healthy_y_range=(-0.8, 0.8),
+                 max_timestep=50
                 ):
 
         self._terminate_when_unhealthy = terminate_when_unhealthy
         self._healthy_z_range = healthy_z_range
         self._healthy_y_range = healthy_y_range
+        self.max_timestep = max_timestep
+        self.curr_timestep = 0
         mujoco_env.MujocoEnv.__init__(self, xml_file, 5)
         utils.EzPickle.__init__(self)
-
-    # @property
-    # def contact_forces(self):
-    #     raw_contact_forces = self.sim.data.cfrc_ext
-    #     return raw_contact_forces
-
-    # @property
-    # def contact_cost(self):
-    #     contact_cost = self._contact_cost_weight * np.sum(
-    #         np.square(self.contact_forces))
-    #     min_value, max_value = self._contact_force_range
-    #     contact_cost = np.clip(contact_cost, min_value, max_value)
-    #     return contact_cost
 
     @property
     def get_body_Rot(self):
@@ -78,7 +68,7 @@ class SoloEnv(mujoco_env.MujocoEnv, utils.EzPickle):
 
     @property
     def done(self):
-        done = (not self.is_healthy
+        done = (not self.is_healthy or self.curr_timestep > self.max_timestep
                 if self._terminate_when_unhealthy
                 else False)
         return done
@@ -86,6 +76,7 @@ class SoloEnv(mujoco_env.MujocoEnv, utils.EzPickle):
     def step(self, action):
         xposbefore = self.sim.data.qpos[0]
         self.do_simulation(action, self.frame_skip)
+        self.curr_timestep += self.dt
         xposafter = self.sim.data.qpos[0]
         x_velocity = (xposafter - xposbefore) / self.dt
 
@@ -99,14 +90,10 @@ class SoloEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         
         # reward
         forward_reward = 2 * x_velocity
-        if forward_reward > 2:
-            forward_reward = 2
         rewards = forward_reward + dist_reward #+ pos_reward
 
         # costs
         ctrl_cost = 0.1 * np.sum(np.square(action))
-        root_pitch_cost = 0.02 * np.square(root_pitch_angle_after)
-        root_roll_cost = 0.02 * np.square(root_roll_angle_after)
         y_deviation_cost = 0.05 * np.square(self.sim.data.qpos[1])
 
         costs = ctrl_cost + self.x_absRot_cost + self.y_absRot_cost + self.z_absRot_cost + y_deviation_cost
@@ -141,6 +128,7 @@ class SoloEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         qvel = self.init_qvel + 0.1 * self.np_random.randn(
             self.model.nv)
         self.set_state(qpos, qvel)
+        self.curr_timestep = 0
         observation = self._get_obs()
 
         return observation

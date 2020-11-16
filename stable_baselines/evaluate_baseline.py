@@ -10,23 +10,27 @@ from environments.soloEnv import SoloEnv
 import numpy as np
 import argparse
 
-def evaluate(env, model, print_info, num_steps=1000):
-	while True:
+def evaluate(env, model, print_info, total_ep=100):
+	overall_rewards = []
+	for i in range(total_ep):
+		episode_rewards = []
 		obs = env.reset()
-		for i in range(num_steps):
-			episode_rewards = [0.0]
+		while True:
 			action, _states = model.predict(obs)
 			obs, reward, done, info = env.step(action)
-			env.render()
+			# env.render()
 
 			if print_info:
 				print(info)
 
 			episode_rewards.append(reward)
 			if done:
-				mean_reward = round(np.mean(episode_rewards), 1)
-				print("Mean reward:", mean_reward)
+				total_reward = sum(episode_rewards)
+				overall_rewards.append(total_reward)
+				print("Total reward:", total_reward)
+				episode_rewards = []
 				break
+	return np.mean(overall_rewards)
 
 
 parser = argparse.ArgumentParser()
@@ -36,13 +40,16 @@ args = parser.parse_args()
 
 env = SoloEnv()
 filename = args.load
-algo = filename.split("_")[2]
+algo = filename.split("_")[-1]
 
 if algo == 'SAC':
   	model = SAC.load(args.load)
-elif algo == 'DDPG':
-	model = DDPG.load(args.load)
+elif algo == 'TRPO':
+	model = TRPO.load(args.load)
 elif algo == 'PP02':
 	model = PPO2.load(arg.load)
 
-mean_reward = evaluate(env, model, bool(args.verbose), num_steps=5000)
+total_ep = 100
+
+mean_reward = evaluate(env, model, bool(args.verbose), total_ep=total_ep)
+print("Total mean reward over {} episodes = {}".format(total_ep, mean_reward))

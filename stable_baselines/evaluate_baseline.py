@@ -10,7 +10,7 @@ from environments.soloEnv import SoloEnv
 import numpy as np
 import argparse
 
-def evaluate(env, model, print_info, total_ep=100):
+def evaluate(env, model, print_info, total_ep=10):
 	overall_rewards = []
 	for i in range(total_ep):
 		episode_rewards = []
@@ -18,7 +18,7 @@ def evaluate(env, model, print_info, total_ep=100):
 		while True:
 			action, _states = model.predict(obs)
 			obs, reward, done, info = env.step(action)
-			# env.render()
+			env.render()
 
 			if print_info:
 				print(info)
@@ -49,7 +49,7 @@ elif algo == 'TRPO':
 elif algo == 'PP02':
 	model = PPO2.load(arg.load)
 
-total_ep = 100
+total_ep = 10
 
 mean_reward = evaluate(env, model, bool(args.verbose), total_ep=total_ep)
 print("Total mean reward over {} episodes = {}".format(total_ep, mean_reward))

@@ -17,7 +17,7 @@ def evaluate(env, model, info, num_steps=10000):
     for i in range(num_steps):
         action = model.actor_network.predict(np.expand_dims(obs, axis=0))
         obs, reward, done, info = env.step(action)
-        env.render()
+        # env.render()
         if info is True:
             print(info)
 

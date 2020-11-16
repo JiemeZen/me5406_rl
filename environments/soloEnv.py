@@ -12,7 +12,7 @@ class SoloEnv(mujoco_env.MujocoEnv, utils.EzPickle):
                  terminate_when_unhealthy=True,
                  healthy_z_range=(0.17, 0.8),
                  healthy_y_range=(-0.8, 0.8),
-                 max_timestep=50
+                 max_timestep=100
                 ):
 
         self._terminate_when_unhealthy = terminate_when_unhealthy

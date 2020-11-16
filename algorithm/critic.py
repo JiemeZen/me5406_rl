@@ -5,19 +5,22 @@ from tensorflow.keras.initializers import *
 import numpy as np
 
 class CriticNetwork():
-    def __init__(self, sess, state_dim, act_dim, lr=0.001, tau=0.001):
+    def __init__(self, sess, state_dim, act_dim, batch_size, writer, lr=0.001, tau=0.001):
         self.sess = sess
         self.state_dim = state_dim
         self.act_dim = act_dim
+        self.batch_size = batch_size
         self.lr = lr
         self.tau = tau
         self.time_step = 0
 
         self.saver = tf.train.Saver()
+        writer.add_graph(self.sess.graph)
+        # self.tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=tensorboard_log)
 
         self.model = self.create_network('critic')
         self.target_model = self.create_network('critic_target')
-        self.model.compile(loss='mse', optimizer=tf.train.AdamOptimizer(lr))
+        self.model.compile(loss='mse', optimizer=tf.train.AdamOptimizer(lr), metrics=['accuracy'])
         self.target_model.compile(loss='mse', optimizer=tf.train.AdamOptimizer(lr), metrics=['accuracy'])
        
         self.action_gradients = tf.gradients(self.model.output, self.model.input[1])
@@ -26,6 +29,7 @@ class CriticNetwork():
     def train(self, labels, state, action):
         self.time_step += 1
         self.model.train_on_batch([state, action], labels)
+        # self.model.fit(x=[state, action], y=labels, batch_size=self.batch_size, callbacks=[self.tensorboard_callback])
 
     def action_gradient(self, states, actions):
         return self.sess.run(self.action_gradients, feed_dict={
@@ -46,23 +50,20 @@ class CriticNetwork():
     def create_network(self, name):
         state = Input(shape=[self.state_dim])
         action = Input(shape=[self.act_dim])
-        x = Dense(64, activation='relu')(state)
+        x = Dense(64, activation='relu', name="Critic_Hidden_1")(state)
         x = concatenate([Flatten()(x), action])
-        x = Dense(64, activation='relu')(x)
-        out = Dense(1, activation='linear', kernel_initializer=RandomUniform())(x)
+        x = Dense(64, activation='relu', name="Critic_Hidden_2")(x)
+        out = Dense(1, activation='linear', kernel_initializer=RandomUniform(), name="Critic_Output")(x)
         return Model(inputs=[state, action], outputs=out, name=name)
 
     def load_network(self, path=None):
-        if path == None:
-            checkpoint = tf.train.get_checkpoint_state("saved_critic_networks")
-        else:
-            checkpoint = tf.train.get_checkpoint_state(path + "/saved_critic_networks")
+        checkpoint = tf.train.get_checkpoint_state(path + "/critic")
         if checkpoint and checkpoint.model_checkpoint_path:
             self.saver.restore(self.sess, checkpoint.model_checkpoint_path)
-            print("Successfully loaded:", checkpoint.model_checkpoint_path)
+            print("[INFO] Successfully loaded: {}".format(checkpoint.model_checkpoint_path))
         else:
-            print("Could not find old network weights")
+            print("[ERROR] Unable to load network!")
 
-    def save_network(self):
-        print('saving critic-network...')
-        self.saver.save(self.sess, './saved_critic_networks/' + 'critic-network', global_step=self.time_step)
+    def save_network(self, path):
+        print('[INFO] Saving CriticNetwork to {}'.format(path + "/critic/"))
+        self.saver.save(self.sess, path + "/critic/critic-network", global_step=self.time_step)

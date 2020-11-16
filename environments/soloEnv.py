@@ -7,7 +7,7 @@ import time
 
 class SoloEnv(mujoco_env.MujocoEnv, utils.EzPickle):
     def __init__(self,
-                 xml_file="./urdf/solo8.xml",
+                 xml_file="../assets/solo8_hfield.xml",
 
                  terminate_when_unhealthy=True,
                  healthy_z_range=(0.17, 0.8),
@@ -96,9 +96,6 @@ class SoloEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         else:
             dist_reward = 0
         # print(dist_reward)
-
-        root_pitch_angle_after = self.sim.data.qvel[4]
-        root_roll_angle_after = self.sim.data.qvel[5]
         
         # reward
         forward_reward = 2 * x_velocity
@@ -110,8 +107,9 @@ class SoloEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         ctrl_cost = 0.1 * np.sum(np.square(action))
         root_pitch_cost = 0.02 * np.square(root_pitch_angle_after)
         root_roll_cost = 0.02 * np.square(root_roll_angle_after)
-        
-        costs = ctrl_cost + self.x_absRot_cost + self.y_absRot_cost + self.z_absRot_cost #+ root_pitch_cost + root_roll_cost
+        y_deviation_cost = 0.05 * np.square(self.sim.data.qpos[1])
+
+        costs = ctrl_cost + self.x_absRot_cost + self.y_absRot_cost + self.z_absRot_cost + y_deviation_cost
 
         # summation of all rewards
         reward = rewards - costs

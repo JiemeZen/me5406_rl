@@ -1,22 +1,16 @@
 import gym
-import soloEnv
+from environments.soloEnv import SoloEnv
+from algorithm.ddpg import DDPG
 import numpy as np
 import argparse
-from ddpg.ddpg import DDPG
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--folder', type=str, default=None, help="Directory of the model")
+parser.add_argument('--model_name', type=str, default=None, help="Directory of the model")
+parser.add_argument('--map', type=str, default="./assets/solo8_hfield.xml", help="Map to simulate")
+parser.add_argument('--verbose', type=bool, default=False, help="Display environment information (True, False)")
 args = parser.parse_args()
 
-env = soloEnv.SoloEnv()
-agent = DDPG(env, tensorboard_log="./ddpg_solo/DDPG")
-
-if args.folder != None:
-    agent.load_network(path=str("./trainedNet/"+args.folder))
-else:
-    agent.load_network()
-
-def evaluate(env, model, num_steps=10000):
+def evaluate(env, model, info, num_steps=10000):
     episode_rewards = [0.0]
     obs = env.reset()
 
@@ -24,12 +18,17 @@ def evaluate(env, model, num_steps=10000):
         action = model.actor_network.predict(np.expand_dims(obs, axis=0))
         obs, reward, done, info = env.step(action)
         env.render()
-        print(info)
+        if info is True:
+            print(info)
 
         episode_rewards[-1] += reward
         if done:
             obs = env.reset()
             episode_rewards.append(0.0)
 
-evaluate(env, agent)
+env = SoloEnv(args.map)
+agent = DDPG(env, tensorboard_log="./ddpg_tensorboard/DDPG_" + args.model_name)
+agent.load_network(args.model_name)
+evaluate(env, agent, info=args.verbose)
 
+# python ddpg_evaluate.py --model_name ./trainedNet/soloEnvDefault --verbose False

@@ -8,12 +8,12 @@
     </default>
     
     <asset>
-        <mesh name="solo_body" file="solo_body.stl" />
-        <mesh name="solo_upper_leg_left_side" file="solo_upper_leg_left_side.stl" />
-        <mesh name="solo_lower_leg_left_side" file="solo_lower_leg_left_side.stl" />
-        <mesh name="solo_foot" file="solo_foot.stl" />
-        <mesh name="solo_upper_leg_right_side" file="solo_upper_leg_right_side.stl" />
-        <mesh name="solo_lower_leg_right_side" file="solo_lower_leg_right_side.stl" />
+        <mesh name="solo_body" file="./mesh/solo_body.stl" />
+        <mesh name="solo_upper_leg_left_side" file="./mesh/solo_upper_leg_left_side.stl" />
+        <mesh name="solo_lower_leg_left_side" file="./mesh/solo_lower_leg_left_side.stl" />
+        <mesh name="solo_foot" file="./mesh/solo_foot.stl" />
+        <mesh name="solo_upper_leg_right_side" file="./mesh/solo_upper_leg_right_side.stl" />
+        <mesh name="solo_lower_leg_right_side" file="./mesh/solo_lower_leg_right_side.stl" />
         
         <texture builtin="gradient" height="100" rgb1="1 1 1" rgb2="0 0 0" type="skybox" width="100"/>
         <texture builtin="flat" height="1278" mark="cross" markrgb="1 1 1" name="texgeom" random="0.01" rgb1="0.8 0.6 0.4" rgb2="0.8 0.6 0.4" type="cube" width="127"/>

@@ -15,12 +15,13 @@ class DDPG():
         self.gamma = gamma
 
         self.sess = tf.InteractiveSession()
+        
         if tensorboard_log is not None:
             self.summary_ops, self.summary_vars = self.build_summaries()    
             self.writer = tf.summary.FileWriter(tensorboard_log, self.sess.graph)
 
-        self.actor_network = ActorNetwork(self.sess, self.obs_dim, self.act_dim)
-        self.critic_network = CriticNetwork(self.sess, self.obs_dim, self.act_dim)
+        self.actor_network = ActorNetwork(self.sess, self.obs_dim, self.act_dim, self.batch_size)
+        self.critic_network = CriticNetwork(self.sess, self.obs_dim, self.act_dim, self.batch_size, self.writer)
 
         self.replay_buffer = ReplayBuffer(1000000)
         self.exploration_noise = OUNoise(self.act_dim)
@@ -32,9 +33,6 @@ class DDPG():
         reward_batch = np.array([data[2] for data in minibatch])
         next_state_batch = np.array([data[3] for data in minibatch])
         done_batch = np.array([data[4] for data in minibatch])
-
-        #state_batch = np.resize(state_batch, [self.batch_size, self.obs_dim])
-        #action_batch = np.resize(action_batch, [self.batch_size, self.act_dim])
 
         # actor takes in state, here i calculate the predicted action by target network, (label) for my main network to chase
         next_action_batch = self.actor_network.predict_target(next_state_batch)
@@ -87,8 +85,10 @@ class DDPG():
                     self.writer.flush()
                     # print("Episode {}: {} reward".format(episode, episode_reward))
                     break
-        self.actor_network.save_network()
-        self.critic_network.save_network()
+
+    def save(self, path):
+        self.actor_network.save_network(path)
+        self.critic_network.save_network(path)
 
     def build_summaries(self):
         episode_reward = tf.Variable(0)

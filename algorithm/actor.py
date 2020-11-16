@@ -5,12 +5,12 @@ from tensorflow.keras.initializers import *
 import numpy as np
 
 class ActorNetwork():
-    def __init__(self, sess, state_dim, act_dim, lr=0.0001, batch_size=64, tau=0.001):
+    def __init__(self, sess, state_dim, act_dim, batch_size, lr=0.0001, tau=0.001):
         self.sess = sess
         self.state_dim = state_dim
         self.act_dim = act_dim  
-        self.lr = lr
         self.batch_size = batch_size
+        self.lr = lr
         self.tau = tau
         self.time_step = 0
 
@@ -60,19 +60,15 @@ class ActorNetwork():
         return tf.train.AdamOptimizer(self.lr).apply_gradients(gradients)
 
     def load_network(self, path=None):
-        if path == None:
-            checkpoint = tf.train.get_checkpoint_state("saved_actor_networks")
-        else: 
-            checkpoint = tf.train.get_checkpoint_state(path + "/saved_actor_networks")
+        checkpoint = tf.train.get_checkpoint_state(path + "/actor")
         if checkpoint and checkpoint.model_checkpoint_path:
             self.saver.restore(self.sess, checkpoint.model_checkpoint_path)
-            print("Successfully loaded:", checkpoint.model_checkpoint_path)
-            print(checkpoint)
+            print("[INFO] Successfully loaded: {}".format(checkpoint.model_checkpoint_path))
         else:
-            print("Could not find old network weights")
+            print("[ERROR] Unable to load network!")
 
-    def save_network(self):
-        print('saving actor-network...')
-        self.saver.save(self.sess, './saved_actor_networks/' + 'actor-network', global_step=self.time_step)
+    def save_network(self, path):
+        print('[INFO] Saving ActorNetwork to {}'.format(path + "/actor/"))
+        self.saver.save(self.sess, path + "/actor/actor-network", global_step=self.time_step)
 
     

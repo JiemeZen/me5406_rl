@@ -7,6 +7,7 @@ import gym
 import mujoco_env
 from stable_baselines import PPO2, TRPO, SAC
 from environments.soloEnv import SoloEnv
+from environments.soloEnvSpeed import SoloEnvSpeed
 import numpy as np
 import argparse
 

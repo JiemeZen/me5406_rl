@@ -142,3 +142,4 @@ cython_debug/
 /trainedNet
 /ddpg_tensorboard
 /stable_baselines/models/
+/stable_baselines/tensorboard_solo

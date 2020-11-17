@@ -1,5 +1,6 @@
 import gym
 from environments.soloEnv import SoloEnv
+from environments.soloEnvSpeed import SoloEnvSpeed
 from algorithm.ddpg import DDPG
 import numpy as np
 import argparse

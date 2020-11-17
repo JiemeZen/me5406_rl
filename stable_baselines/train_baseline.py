@@ -4,6 +4,7 @@ import os
 sys.path.append(os.path.abspath(os.path.join("..", "")))
 
 from environments.soloEnv import SoloEnv
+from environments.soloEnvSpeed import SoloEnvSpeed
 import gym
 import argparse
 

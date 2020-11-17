@@ -5,7 +5,7 @@ import mujoco_env
 import math
 import time
 
-class SoloEnv(mujoco_env.MujocoEnv, utils.EzPickle):
+class SoloEnvSpeed(mujoco_env.MujocoEnv, utils.EzPickle):
     def __init__(self,
                  xml_file="../assets/solo8.xml",
                  terminate_when_unhealthy=True,

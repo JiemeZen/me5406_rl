@@ -2,6 +2,7 @@ import gym
 import os
 import shutil
 from environments.soloEnv import SoloEnv
+from environments.soloEnvSpeed import SoloEnvSpeed
 import argparse
 from algorithm.ddpg import DDPG
 
@@ -21,7 +22,7 @@ else:
     shutil.rmtree(path)
     os.mkdir(path)
 
-env = SoloEnv(xml_file=args.map)  
+env = SoloEnvSpeed(xml_file=args.map)  
 agent = DDPG(env, tensorboard_log="./ddpg_tensorboard/DDPG_" + args.model_name)
 agent.learn(args.training_episode)
 agent.save(path)

@@ -139,4 +139,6 @@ cython_debug/
 *.zip
 /trainedModel
 /trainedAnt
+/trainedNet
 /ddpg_tensorboard
+/stable_baselines/models/

@@ -8,7 +8,7 @@ from algorithm.ddpg import DDPG
 parser = argparse.ArgumentParser()
 parser.add_argument('--model_name', type=str, default="/model", help="Model Name")
 parser.add_argument('--training_episode', type=int, default=800, help="Episodes to train")
-parser.add_argument('--map', type=str, default="./assets/solo8_hfield.xml", help="Map to simulate")
+parser.add_argument('--map', type=str, default="./assets/solo8.xml", help="Map to simulate")
 args = parser.parse_args()
 
 print("---------- [INFO] Starting Training ----------")

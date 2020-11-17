@@ -6,7 +6,7 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--model_name', type=str, default=None, help="Directory of the model")
-parser.add_argument('--map', type=str, default="./assets/solo8_hfield.xml", help="Map to simulate")
+parser.add_argument('--map', type=str, default="./assets/solo8.xml", help="Map to simulate")
 parser.add_argument('--verbose', type=bool, default=False, help="Display environment information (True, False)")
 args = parser.parse_args()
 

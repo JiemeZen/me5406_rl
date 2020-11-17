@@ -13,21 +13,15 @@ class SoloEnv(mujoco_env.MujocoEnv, utils.EzPickle):
                  healthy_z_range=(0.17, 0.8),
                  healthy_y_range=(-0.8, 0.8),
                  max_timestep=100,
-                 max_distance=40
                 ):
 
         self._terminate_when_unhealthy = terminate_when_unhealthy
         self._healthy_z_range = healthy_z_range
         self._healthy_y_range = healthy_y_range
         self.max_timestep = max_timestep
-        self._max_distance = max_distance
         self.curr_timestep = 0
         mujoco_env.MujocoEnv.__init__(self, xml_file, 5)
         utils.EzPickle.__init__(self)
-
-    @property
-    def has_reached_max_distance(self):
-        return self.sim.data.qpos[0] > self._max_distance
 
     @property
     def get_body_Rot(self):
@@ -48,35 +42,20 @@ class SoloEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         return roll, pitch, yaw
 
     @property
-    def x_absRot_cost(self):
-        x_absRot_cost = 0.02 * abs(self.get_body_Rot[0]/180)
-        return x_absRot_cost
-
-    @property
-    def y_absRot_cost(self):
-        y_absRot_cost = 0.02 * abs(self.get_body_Rot[1]/180)
-        return y_absRot_cost
-
-    @property
-    def z_absRot_cost(self):
-        z_absRot_cost = 0.05 * abs(self.get_body_Rot[2]/180)
-        return z_absRot_cost
-
-    @property
     def is_healthy(self):
         min_z, max_z = self._healthy_z_range
         min_y, max_y = self._healthy_y_range
         x_vel = self.sim.data.qvel[0]
+        height = self.sim.data.qpos[2]
         yaw = abs(self.get_body_Rot[2])
-        # print(yaw)
-        is_healthy = (min_z < self.sim.data.qpos[2] < max_z) \
-            and (min_y < self.sim.data.qpos[1] < max_y) and yaw < 35
+        y_deviation = self.sim.data.qpos[1]
+        # healthy if height & y_deviation within limit && yaw < 35deg
+        is_healthy = (min_z < height < max_z) and (min_y < y_deviation < max_y) and yaw < 35
         return is_healthy
 
     @property
     def done(self):
-        done = (not self.is_healthy or self.curr_timestep > self.max_timestep \
-                    or self.has_reached_max_distance
+        done = (not self.is_healthy or self.curr_timestep > self.max_timestep
                 if self._terminate_when_unhealthy
                 else False)
         return done
@@ -94,18 +73,14 @@ class SoloEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         if dist_after > dist_bef:                       # If distance is more than prev covered
             dist_reward = 2*dist_after                  # Reward 3 pt * meter covered
         
-        goal_reward = 0
-        if (self.has_reached_max_distance):             # Reward if agent reached edge of the map @40m
-            goal_reward = 500
-        
-        forward_reward = 2 * x_velocity                      # Reward based on velocity
-        rewards = forward_reward + dist_reward + goal_reward # Summation of rewards
+        forward_reward = 2 * x_velocity                 # Reward based on velocity
+        rewards = forward_reward + dist_reward          # Summation of rewards
 
         ctrl_cost = 0.1 * np.sum(np.square(action))  # Cost of moving the joints, to minimise movement
-        y_deviation_cost = 0.1 * np.square(self.sim.data.qpos[1]) # Penalty for deviation away from x-axis
-        x_absRot_cost = self.x_absRot_cost           # Penalty for rotation about x-axis
-        y_absRot_cost = self.y_absRot_cost           # Penalty for rotation about y-axis
-        z_absRot_cost = self.z_absRot_cost           # Penalty for rotation about z-axis
+        y_deviation_cost = 0.5 * np.square(self.sim.data.qpos[1]) # Penalty for deviation away from x-axis
+        x_absRot_cost = 0.02 * abs(self.get_body_Rot[0]/180)      # Penalty for rotation about x-axis
+        y_absRot_cost = 0.02 * abs(self.get_body_Rot[1]/180)      # Penalty for rotation about y-axis
+        z_absRot_cost = 0.1 * abs(self.get_body_Rot[2]/180)       # Penalty for rotation about z-axis
 
         # Summation of all costs
         costs = ctrl_cost + y_deviation_cost + x_absRot_cost + y_absRot_cost + z_absRot_cost
@@ -118,7 +93,6 @@ class SoloEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         info = {
             'dist_reward': dist_reward,
             'forward_reward': forward_reward,
-            'goal_reward': goal_reward,
 
             'ctrl_cost': ctrl_cost,
             'x_absRot_cost': x_absRot_cost,
@@ -147,16 +121,7 @@ class SoloEnv(mujoco_env.MujocoEnv, utils.EzPickle):
         self.set_state(qpos, qvel)
         self.curr_timestep = 0
         observation = self._get_obs()
-
         return observation
-
-    def test(self):
-        qpos = self.sim.data.qpos
-        qpos[0] += 0
-        qvel = self.sim.data.qvel
-        qvel[0] += 0
-        print(qvel)
-        self.set_state(qpos, qvel)
 
     def viewer_step(self):
         for key, value in DEFAULT_CAMERA_CONFIG.items():

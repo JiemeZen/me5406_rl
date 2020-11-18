@@ -12,7 +12,7 @@ https://docs.google.com/document/d/1RJDq4kErDUf3eswtbi8AToFeOjq-RR7MBGoKP2fwPBw/
 
 ## Convert Solo8 urdf to xml
 1. Download the package from https://github.com/open-dynamic-robot-initiative/robot_properties_solo
-2. Convert xacro to urdf using ```rosrun xacro xacro.py your.xacro > your.urdf\
+2. Convert xacro to urdf using ```rosrun xacro xacro.py your.xacro > your.urdf\```
 
 ## Viewing the Robot XML
 1. Go into mujoco 1.5 binary folder. ```$ cd ~/mujoco/mjpro150/bin```

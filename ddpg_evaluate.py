@@ -11,26 +11,49 @@ parser.add_argument('--map', type=str, default="./assets/solo8.xml", help="Map t
 parser.add_argument('--verbose', type=bool, default=False, help="Display environment information (True, False)")
 args = parser.parse_args()
 
-def evaluate(env, model, info, num_steps=10000):
-    episode_rewards = [0.0]
-    obs = env.reset()
+# def evaluate(env, model, info, num_steps=10000):
+#     episode_rewards = [0.0]
+#     obs = env.reset()
 
-    for i in range(num_steps):
-        action = model.actor_network.predict(np.expand_dims(obs, axis=0))
-        obs, reward, done, info = env.step(action)
-        # env.render()
-        if info is True:
-            print(info)
+#     for i in range(num_steps):
+#         action = model.actor_network.predict(np.expand_dims(obs, axis=0))
+#         obs, reward, done, info = env.step(action)
+#         env.render()
+#         if info is True:
+#             print(info)
 
-        episode_rewards[-1] += reward
-        if done:
-            obs = env.reset()
-            episode_rewards.append(0.0)
+#         episode_rewards[-1] += reward
+#         if done:
+#             obs = env.reset()
+#             episode_rewards.append(0.0)
 
-env = SoloEnv(args.map)
+def evaluate(env, model, print_info, total_ep=100):
+	overall_rewards = []
+	for i in range(total_ep):
+		episode_rewards = []
+		obs = env.reset()
+		while True:
+			action = model.actor_network.predict(np.expand_dims(obs, axis=0))
+			obs, reward, done, info = env.step(action)
+			env.render()
+
+			if print_info:
+				print(info)
+
+			episode_rewards.append(reward)
+			if done:
+				total_reward = sum(episode_rewards)
+				overall_rewards.append(total_reward)
+				print("Total reward:", total_reward)
+				episode_rewards = []
+				break
+	return np.mean(overall_rewards)
+
+env = SoloEnvSpeed(args.map)
 
 agent = DDPG(env, tensorboard_log="./ddpg_tensorboard/DDPG_" + args.model_name)
 agent.load_network(args.model_name)
-evaluate(env, agent, info=args.verbose)
+mean = evaluate(env, agent, print_info=args.verbose)
+print("The average reward over 100 evaluation episodes are {}".format(mean))
 
 # python ddpg_evaluate.py --model_name ./trainedNet/soloEnvDefault --verbose False

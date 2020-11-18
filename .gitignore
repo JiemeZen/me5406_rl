@@ -136,10 +136,3 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
-*.zip
-/trainedModel
-/trainedAnt
-/trainedNet
-/ddpg_tensorboard
-/stable_baselines/models/
-/stable_baselines/tensorboard_solo

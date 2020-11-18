@@ -1,0 +1,2 @@
+model_checkpoint_path: "actor-network-67605"
+all_model_checkpoint_paths: "actor-network-67605"

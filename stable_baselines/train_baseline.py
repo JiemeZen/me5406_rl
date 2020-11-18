@@ -8,9 +8,10 @@ from environments.soloEnvSpeed import SoloEnvSpeed
 import gym
 import argparse
 
-from stable_baselines import A2C, TRPO, SAC
+from stable_baselines import DDPG, TRPO, SAC
 from stable_baselines.common.policies import MlpPolicy, MlpLstmPolicy, MlpLnLstmPolicy, CnnPolicy, CnnLstmPolicy, CnnLnLstmPolicy
 from stable_baselines.sac.policies import MlpPolicy as MlpPolicySAC, LnMlpPolicy as LnMlpPolicySAC
+from stable_baselines.ddpg.policies import MlpPolicy as MlpPolicyDDPG, LnMlpPolicy as LnMlpPolicyDDPG
 from stable_baselines.common.vec_env import DummyVecEnv, SubprocVecEnv
 from stable_baselines.common import set_global_seeds
 from stable_baselines.common.cmd_util import make_vec_env
@@ -28,8 +29,8 @@ if args.algo == 'SAC':
     model = SAC(MlpPolicySAC, env, verbose=2, batch_size=64, tensorboard_log="./tensorboard_solo")
 elif args.algo == 'TRPO':
     model = TRPO(MlpPolicy, env, verbose=2, tensorboard_log="./tensorboard_solo/")
-elif args.algo == 'A2C':
-    model = A2C(MlpPolicy, env, verbose=2, tensorboard_log="./tensorboard_solo")
+elif args.algo == 'DDPG':
+    model = DDPG(MlpPolicyDDPG, env, batch_size=128, verbose=2, tensorboard_log="./tensorboard_solo")
 else:
     print("Model does not exists.")
     sys.exit()
@@ -45,8 +46,8 @@ while (curr_trained_steps < args.training_step):
             model = SAC.load("./models/" + args.model_name + "_" + str(curr_trained_steps) + "_" + args.algo)
         elif args.algo == 'TRPO':
             model = TRPO.load("./models/" + args.model_name + "_" + str(curr_trained_steps) + "_" + args.algo)
-        elif args.algo == 'A2C':
-            model = A2C.load("./models/" + args.model_name + "_" + str(curr_trained_steps) + "_" + args.algo)      
+        elif args.algo == 'DDPG':
+            model = DDPG.load("./models/" + args.model_name + "_" + str(curr_trained_steps) + "_" + args.algo)      
         model.set_env(env)
     model.learn(total_timesteps=delta_steps)
     curr_trained_steps += delta_steps
@@ -55,4 +56,4 @@ while (curr_trained_steps < args.training_step):
 
 sys.exit()
 
-# python train_baseline.py --algo SAC --model_name solotest --training_step 1000
+# python train_baseline.py --algo SAC --model_name solotest --training_step 1000 --step_interval 1000

@@ -1,6 +1,7 @@
+# This code is a modification of the original mujoco_env from OpenAI.
+# https://github.com/openai/gym/blob/master/gym/envs/mujoco/mujoco_env.py
 from collections import OrderedDict
 import os
-
 
 from gym import error, spaces
 from gym.utils import seeding

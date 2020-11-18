@@ -10,9 +10,9 @@ class SoloEnv(mujoco_env.MujocoEnv, utils.EzPickle):
                  xml_file="../assets/solo8.xml",
 
                  terminate_when_unhealthy=True,
-                 healthy_z_range=(0.17, 0.8),
-                 healthy_y_range=(-0.8, 0.8),
-                 max_timestep=100,
+                 healthy_z_range=(0.17, 0.8),       # define healthy z range
+                 healthy_y_range=(-0.8, 0.8),       # define healthy y range
+                 max_timestep=100,                  # reduce timeout timestep (default 500)
                 ):
 
         self._terminate_when_unhealthy = terminate_when_unhealthy
@@ -25,30 +25,36 @@ class SoloEnv(mujoco_env.MujocoEnv, utils.EzPickle):
 
     @property
     def get_body_Rot(self):
+        """
+        Convert Quaternion to Euler Angles
+        """
         x, y, z, w = self.sim.data.get_body_xquat("solo_body")
         t0 = +2.0 * (w * x + y * z)
         t1 = +1.0 - 2.0 * (x * x + y * y)
-        roll = math.degrees(math.atan2(t0, t1))
+        roll = math.degrees(math.atan2(t0, t1)) # Get roll
 
         t2 = +2.0 * (w * y - z * x)
         t2 = +1.0 if t2 > +1.0 else t2
         t2 = -1.0 if t2 < -1.0 else t2
-        pitch = math.degrees(math.asin(t2))
+        pitch = math.degrees(math.asin(t2))     # Get pitch
 
         t3 = +2.0 * (w * z + x * y)
         t4 = +1.0 - 2.0 * (y * y + z * z)
-        yaw = math.degrees(math.atan2(t3, t4))
+        yaw = math.degrees(math.atan2(t3, t4))  # Get yaw
 
         return roll, pitch, yaw
 
     @property
     def is_healthy(self):
+        """
+        Check if the agent is healthy
+        """
         min_z, max_z = self._healthy_z_range
         min_y, max_y = self._healthy_y_range
-        x_vel = self.sim.data.qvel[0]
-        height = self.sim.data.qpos[2]
-        yaw = abs(self.get_body_Rot[2])
-        y_deviation = self.sim.data.qpos[1]
+        x_vel = self.sim.data.qvel[0]           # Obtain velocity along x
+        height = self.sim.data.qpos[2]          # Obtain height of the agent
+        yaw = abs(self.get_body_Rot[2])         # Obtain absolute yaw angle
+        y_deviation = self.sim.data.qpos[1]     # Obtain y-deviation
         # healthy if height & y_deviation within limit && yaw < 35deg
         is_healthy = (min_z < height < max_z) and (min_y < y_deviation < max_y) and yaw < 35
         return is_healthy
@@ -108,12 +114,12 @@ class SoloEnv(mujoco_env.MujocoEnv, utils.EzPickle):
 
     def _get_obs(self):
         position = self.sim.data.qpos.flat[1:]
-        velocity = self.sim.data.qvel.flat
+        velocity = self.sim.data.qvel.flat      # 14 dims
 
         observations = np.concatenate([position, velocity])
-        return observations
+        return observations                     # Total 28 obs space
 
-    def reset_model(self):
+    def reset_model(self):  # Reset the model back to original state
         qpos = self.init_qpos + self.np_random.uniform(
             low=-0.1, high=0.1, size=self.model.nq)
         qvel = self.init_qvel + 0.1 * self.np_random.randn(

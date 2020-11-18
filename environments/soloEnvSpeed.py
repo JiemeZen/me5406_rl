@@ -43,23 +43,23 @@ class SoloEnvSpeed(mujoco_env.MujocoEnv, utils.EzPickle):
         self.do_simulation(action, self.frame_skip)
         self._curr_frame += self.dt
         xposafter = self.sim.data.qpos[0]
-        x_velocity = (xposafter - xposbefore) / self.dt
-        y_angular_vel = self.sim.data.qvel[4]
-        z_angular_vel = self.sim.data.qvel[5]
+        x_velocity = (xposafter - xposbefore) / self.dt  # vel = distance / time
+        y_angular_vel = self.sim.data.qvel[4]  # getting y angular velocity
+        z_angular_vel = self.sim.data.qvel[5]  # getting z angular velocity
         
         # reward
-        forward_reward = 2 * x_velocity
+        forward_reward = 2 * x_velocity  # Multiply a factor of 2 to x velocity to encourage agent to travel in x direction
         fastest_reward = 0
 
         if (self.has_reached_max_distance):
-            fastest_reward = 500 / self._curr_frame
+            fastest_reward = 500 / self._curr_frame  # One shot reward if agent reach max distance based on how fast it travels.
         
         rewards = forward_reward + fastest_reward
 
         # costs
-        ctrl_cost = 0.1 * np.sum(np.square(action))
-        y_angular_cost = 0.02 * np.square(y_angular_vel)
-        z_angular_cost = 0.02 * np.square(z_angular_vel)
+        ctrl_cost = 0.1 * np.sum(np.square(action))  # Control cost to minimize extreme actions.
+        y_angular_cost = 0.02 * np.square(y_angular_vel)  # Penalize pitch to prevent agent from diving headfirst
+        z_angular_cost = 0.02 * np.square(z_angular_vel)  # Penalize yaw to prevent randomly spin actions.
         costs = ctrl_cost + y_angular_cost + z_angular_cost
 
         # summation of all rewards

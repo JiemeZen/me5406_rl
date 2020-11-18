@@ -21,9 +21,15 @@ parser.add_argument('--algo', type=str, default="SAC", help="Algorithm to train 
 parser.add_argument('--model_name', type=str, default="/soloModel", help="Model Name")
 parser.add_argument('--training_step', type=int, default=200000, help="Steps to train")
 parser.add_argument('--step_interval', type=int, default=0, help="Interval")
+parser.add_argument('--env', type=str, default="Straight", help="Straight or Speed")
 args = parser.parse_args()
 
-env = SoloEnv()
+if args.env == "Straight":
+    env = SoloEnv()  
+elif args.env == "Speed":
+    env = SoloEnvSpeed()   
+else:
+    raise Exception("Unknown environment. The only valid environments are Straight & Speed.")
 
 if args.algo == 'SAC':
     model = SAC(MlpPolicySAC, env, verbose=2, batch_size=64, tensorboard_log="./tensorboard_solo")
@@ -55,5 +61,3 @@ while (curr_trained_steps < args.training_step):
 
 
 sys.exit()
-
-# python train_baseline.py --algo SAC --model_name solotest --training_step 1000 --step_interval 1000

@@ -20,13 +20,13 @@ https://docs.google.com/document/d/1RJDq4kErDUf3eswtbi8AToFeOjq-RR7MBGoKP2fwPBw/
 
 ## Training with our DDPG algorithm
 Run ddpg_train.py to train the model. 1000 episodes will require about 1-2 hours. The trained model will be stored in ./trainedNet directory.</br>
-```$ python ddpg_train.py --model_name myModel --training_episode 1000 --map ./assets/solo8.xml``` </br>
-```$ python ddpg_train.py --model_name myModel```
+```$ python ddpg_train.py --model_name myModel --env Straight --training_episode 1000 --map ./assets/solo8.xml``` </br>
+```$ python ddpg_train.py --model_name myModel --env Speed```
 
 ## Evaluate the DDPG trained model
 Run ddpg_evaluate.py to evaluate the model. Toggle verbose between 0 or 1 to view simulation informations.</br>
-```$ python ddpg_evaluate.py --model_name ./trainedNet/myModel --verbose 0``` </br>
-```$ python ddpg_evaluate.py --model_name ./trainedNet/myModel --verbose 1``` </br>
+```$ python ddpg_evaluate.py --model_name --env Straight ./trainedNet/myModel --verbose 0``` </br>
+```$ python ddpg_evaluate.py --model_name --env Speed ./trainedNet/myModel --verbose 1``` </br>
 
 ## Stable Baselines 
 To compare our DDPG algorithm with other state-of-the-art algorithm, we used Stable Baselines library to train and evaluate the model. More information can be found here https://stable-baselines.readthedocs.io/en/master/
@@ -36,15 +36,19 @@ To compare our DDPG algorithm with other state-of-the-art algorithm, we used Sta
 * Training
   * Go to stable baselines directory. ```$ cd me5406_rl/stable_baselines```
   * Run train_baseline.py. Trained models will be saved under ./models folder. 
-  * Train with saving intervals. One copy of the model will be saved at every intervals. ```$ python train_baseline.py --algo SAC --model_name myModel --training_step 200000 --step_interval 20000```
-  * Train without intervals ```$ python train_baseline.py --algo SAC --model_name myModel --training_step 200000```
+  * Train with saving intervals. One copy of the model will be saved at every intervals. ```$ python train_baseline.py --algo SAC --model_name myModel --training_step 200000 --step_interval 20000 --env Speed```
+  * Train without intervals ```$ python train_baseline.py --algo SAC --model_name myModel --training_step 200000 --env Straight```
 * Evaluation
   * Run evaluate_baseline.py to evaluate the model.
-  * ```$ python evaluate_baseline.py --load ./models/myModel --verbose 0```
-  * ```$ python evaluate_baseline.py --load ./models/myModel --verbose 1```
+  * ```$ python evaluate_baseline.py --load ./models/myModel --env Straight --verbose 0```
+  * ```$ python evaluate_baseline.py --load ./models/myModel --env Speed --verbose 1```
 
-## Code References
-1. DDPG written with tensorflow and keras. https://github.com/agakshat/tensorflow-ddpg
-2. DDPG explained. https://towardsdatascience.com/deep-deterministic-policy-gradients-explained-2d94655a9b7b
+## External Code References
+1. Solo8 Robot Model, urdf description and stl files. https://open-dynamic-robot-initiative.github.io/
+2. DDPG written with tensorflow and keras. https://github.com/agakshat/tensorflow-ddpg
 3. DDPG paper. https://arxiv.org/pdf/1509.02971.pdf
 4. Stable baselines. https://github.com/hill-a/stable-baselines
+5. Mujoco-py wrapper by OpenAI. https://github.com/openai/mujoco-py
+6. Mujoco cpp XML/API reference. http://www.mujoco.org/book/index.html
+7. Height field generator. https://github.com/rll/rllab/blob/master/rllab/envs/mujoco/hill/terrain.py
+8. Mujoco_py env integrated with OpenAI gym. https://github.com/openai/gym/blob/master/gym/envs/mujoco/mujoco_env.py

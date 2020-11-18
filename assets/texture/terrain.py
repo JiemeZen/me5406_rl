@@ -1,3 +1,6 @@
+# This code originated from Rllab to minimize external dependencies. 
+# https://github.com/rll/rllab/blob/master/rllab/envs/mujoco/hill/terrain.py
+
 from scipy.stats import multivariate_normal
 from scipy.signal import convolve2d
 import matplotlib

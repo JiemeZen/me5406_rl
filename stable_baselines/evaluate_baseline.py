@@ -39,9 +39,16 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--load', type=str, default="./models/soloWalk_best_SAC", help="Label of the model")
 parser.add_argument('--verbose', type=int, default=0, help="Verbose (0, 1)")
 parser.add_argument('--render',type=int, default=0, help="Render Simulation (0, 1)")
+parser.add_argument('--env', type=str, default="Straight", help="Straight or Speed")
 args = parser.parse_args()
 
-env = SoloEnv()
+if args.env == "Straight":
+    env = SoloEnv()  
+elif args.env == "Speed":
+    env = SoloEnvSpeed()   
+else:
+    raise Exception("Unknown environment. The only valid environments are Straight & Speed.")
+	
 filename = args.load
 algo = filename.split("_")[-1]
 
